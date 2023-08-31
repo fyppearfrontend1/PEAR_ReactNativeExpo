@@ -51,7 +51,7 @@ module.exports = {
     emulator: {
       type: 'android.emulator',
       device: {
-        avdName: 'FYP_-_Test_Tablet'
+        avdName: 'Pixel_3_API_33'
       }
     }
   },
