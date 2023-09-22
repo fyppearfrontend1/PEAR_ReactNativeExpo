@@ -6,6 +6,13 @@ import { Image } from 'react-native';
  * List all end points here
  */
 const endpoint = '/Patient';
+const allergyEndpoint = '/Allergy';
+const vitalEndpoint = '/Vital';
+const prescriptionEndpoint = '/Prescription';
+const problemLogEndpoint = '/ProblemLog';
+const medicalHistorypoint = '/MedicalHistory';
+const activityEndpoint = '/Activity';
+const routineEndpoint = '/Routine';
 const patientList = `${endpoint}/patientList`;
 // `${endpoint}/patientListByUserId` changed to ${endpoint}/patientListByLoggedInCaregiver
 // to enable fetching caregiver specific patients
@@ -14,6 +21,12 @@ const patientAdd = `${endpoint}/add`;
 const patientUpdate = `${endpoint}/update`; //eslint-disable-line no-unused-vars
 const privacyLevelUpdate = `${endpoint}/UpdatePatient`; //eslint-disable-line no-unused-vars
 const patientDelete = `${endpoint}/delete`; //eslint-disable-line no-unused-vars
+const patientAllergy = `${allergyEndpoint}/PatientAllergy`; //eslint-disable-line no-unused-vars
+const patientVitalList = `${vitalEndpoint}/list`; //eslint-disable-line no-unused-vars
+const patientPrescriptionList = `${prescriptionEndpoint}/PatientPrescription`; //eslint-disable-line no-unused-vars
+const patientProblemLog = `${problemLogEndpoint}/PatientProblemLog`; //eslint-disable-line no-unused-vars
+const patientMedicalHistory = `${medicalHistorypoint}/list`; //eslint-disable-line no-unused-vars
+const patientRoutine = `${activityEndpoint}${routineEndpoint}/PatientRoutine`; //eslint-disable-line no-unused-vars
 
 /*
  * List all functions here
@@ -34,6 +47,9 @@ const addPatientForm = (arr, str, patientData) => {
       }
       if (key == 'IsChecked') {
         continue;
+      }
+      if (val instanceof Date) {
+        val = val.toISOString().split('T')[0];
       }
       // if AllergyListID is 'None', do not append allergy info to patientData
       if (key == 'AllergyListID' && val == 2) {
@@ -82,6 +98,60 @@ const getPatientList = async (maskNRIC = true) => {
 
 const getPatientListByLoggedInCaregiver = async (maskNRIC = true) => {
   return client.get(patientListByUserId, maskNRIC);
+};
+
+const getPatientAllergy = async (patientID) => {
+  let params;
+  params = {
+    patientID
+  };
+
+  return client.get(patientAllergy, params);
+};
+
+const getPatientVitalList = async (patientID) => {
+  let params;
+  params = {
+    patientID
+  };
+
+  return client.get(patientVitalList, params);
+};
+
+const getPatientPrescriptionList = async (patientID) => {
+  let params;
+  params = {
+    patientID
+  };
+
+  return client.get(patientPrescriptionList, params);
+};
+
+const getPatientProblemLog = async (patientID) => {
+  let params;
+  params = {
+    patientID
+  };
+
+  return client.get(patientProblemLog, params);
+};
+
+const getPatientMedicalHistory= async (patientID) => {
+  let params;
+  params = {
+    patientID
+  };
+
+  return client.get(patientMedicalHistory, params);
+};
+
+const getPatientRoutine = async (patientID) => {
+  let params;
+  params = {
+    patientID
+  };
+
+  return client.get(patientRoutine, params);
 };
 
 // **********************  POST REQUESTS *************************
@@ -152,6 +222,12 @@ export default {
   getPatient,
   getPatientList,
   getPatientListByLoggedInCaregiver,
+  getPatientAllergy,
+  getPatientVitalList,
+  getPatientPrescriptionList,
+  getPatientProblemLog,
+  getPatientMedicalHistory,
+  getPatientRoutine,
   addPatient,
   updatePatient,
 };
