@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DashboardScreen from 'app/screens/DashboardScreen';
 import PatientProfile from 'app/screens/PatientProfileScreen';
 import PatientInformationScreen from 'app/screens/PatientInformationScreen';
-import PatientMedicalHistoryScreen from 'app/screens/PatientMedicalHistoryScreen';
+import PatientActivityPreferenceScreen from 'app/screens/PatientActivityPreferenceScreen';
 import PatientAllergyScreen from 'app/screens/PatientAllergyScreen';
 import PatientHolidayScreen from 'app/screens/PatientHolidayScreen';
 import PatientPhotoAlbumScreen from 'app/screens/PatientPhotoAlbumScreen';
@@ -326,12 +326,12 @@ function DashboardNavigator() {
         }}
       />
       <Stack.Screen
-        name={routes.PATIENT_MEDICAL_HISTORY}
-        component={PatientMedicalHistoryScreen}
+        name={routes.PATIENT_ACTIVITY_PREFERENCE}
+        component={PatientActivityPreferenceScreen}
         options={{
           headerShown: true,
           headerBackTitleVisible: false,
-          title: 'Medical History',
+          title: 'Activity Preference',
         }}
       />
       <Stack.Screen

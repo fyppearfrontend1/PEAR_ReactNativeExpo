@@ -397,7 +397,7 @@ function PatientsScreenWeb(props) {
                     }
                     text="Medical History"
                     navigation={navigation}
-                    routes={routes.PATIENT_MEDICAL_HISTORY}
+                    routes={routes.PATIENT_ACTIVITY_PREFERENCE}
                     patientProfile={clickedPatientProfile}
                   />
                   <PatientProfileCard

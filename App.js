@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, LogBox } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 // Custom import from https://docs.nativebase.io/
 import { NativeBaseProvider } from 'native-base';
@@ -29,7 +29,6 @@ export default function App() {
       background: colors.white_var1,
     },
   };
-  LogBox.ignoreLogs(['Invalid prop textStyle of type array supplied to Cell']);
 
   useEffect(() => {
     restoreUser();
