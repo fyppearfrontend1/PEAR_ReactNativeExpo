@@ -46,13 +46,12 @@ function PatientInformationScreen(props) {
   const [isSocialHistoryLoading, setIsSocialHistoryLoading] = useState(true);
   const [isGuardianLoading, setIsGuardianLoading] = useState(true);
   const getDoctorNote = useApi(doctorNoteApi.getDoctorNote);
+  const getPatientGuardian = useApi(guardianApi.getPatientGuardian);
 
   const [guardianData, setGuardianData] = useState([]);
-  const [guardianInfoData, setGuardianInfoData] = useState([]);
-  const [secondGuardianInfoData, setSecondGuardianInfoData] = useState([]);
+  const [secondGuardianData, setSecondGuardianData] = useState([]);
   const [isSecondGuardian, setIsSecondGuardian] = useState(false);
   const [socialHistoryData, setSocialHistoryData] = useState([]);
-  const [socialHistoryInfo, setSocialHistoryInfo] = useState([]);
   const [patientProfile, setPatientProfile] = useState({});
   const [unMaskedPatientNRIC, setUnMaskedPatientNRIC] = useState('');
   const [unMaskedGuardianNRIC, setUnMaskedGuardianNRIC] = useState('');
@@ -75,20 +74,7 @@ function PatientInformationScreen(props) {
       console.log('Request failed with status code: ', response.status);
       return;
     }
-    if (response.data.data === null) {
-      setSocialHistoryData([]);
-    } else {
-      setSocialHistoryData(response.data.data);
-    }
-  };
-
-  const retrieveGuardian = async (id) => {
-    const response = await guardianApi.getPatientGuardian(id);
-    if (!response.ok) {
-      console.log('Request failed with status code: ', response.status);
-      return;
-    }
-    setGuardianData(response.data.data);
+    setSocialHistoryData(response.data.data);
   };
 
   // Data used for display, sent to InformationCard
@@ -158,199 +144,160 @@ function PatientInformationScreen(props) {
   ];
 
   useEffect(() => {
-    if (Object.keys(guardianData).length>0) {
+    if (getPatientGuardian.data.data) {
       // get data of first guardian
-      setUnMaskedGuardianNRIC(guardianData.guardian.nric);
-      setGuardianInfoData([
+      setUnMaskedGuardianNRIC(getPatientGuardian.data.data.guardian.nric);
+      setGuardianData([
         {
           label: 'First Name',
-          value: guardianData.guardian.firstName || 'Not Available',
+          value: getPatientGuardian.data.data.guardian.firstName || 'Not Available',
         },
         {
           label: 'Last Name',
-          value: guardianData.guardian.lastName || 'Not Available',
+          value: getPatientGuardian.data.data.guardian.lastName || 'Not Available',
         },
         {
           label: 'NRIC',
-          value: guardianData.guardian.nric.replace(/\d{4}(\d{3})/, 'xxxx$1') || 'Not Available',
-        },
-        {
-          label: 'Email',
-          value: guardianData.guardian.email || 'Not Available',
+          value: getPatientGuardian.data.data.guardian.nric.replace(/\d{4}(\d{3})/, 'xxxx$1') || 'Not Available',
         },
         {
           label: "Patient's",
-          value: guardianData.guardian.relationship || 'Not Available',
+          value: getPatientGuardian.data.data.guardian.relationship || 'Not Available',
         },
         {
           label: 'Contact Number',
-          value: guardianData.guardian.contactNo || 'Not Available',
+          value: getPatientGuardian.data.data.guardian.contactNo || 'Not Available',
         },
         {
-          label: 'DOB',
-          value: guardianData.guardian.dob || 'Not Available',
-        },
-        {
-          label: 'Address',
-          value: guardianData.guardian.address || 'Not Available',
-        },
-        {
-          label: 'Temp. Address',
-          value: guardianData.guardian.tempAddress || 'Not Available',
+          label: 'Email',
+          value: getPatientGuardian.data.data.guardian.email || 'Not Available',
         },
       ]);
     }
     // get data of 2nd guardian if any.
     if (
-      guardianData &&
-      guardianData.additionalGuardian &&
-      guardianData.additionalGuardian.nric !== null &&
-      guardianData.additionalGuardian.nric !==
-        guardianData.guardian.nric
+      getPatientGuardian.data.data &&
+      getPatientGuardian.data.data.additionalGuardian &&
+      getPatientGuardian.data.data.additionalGuardian.nric !== null &&
+      getPatientGuardian.data.data.additionalGuardian.nric !==
+        getPatientGuardian.data.data.guardian.nric
     ) {
       setIsSecondGuardian(true);
-      setUnMasked2ndGuardianNRIC(guardianData.additionalGuardian.nric);
-      setSecondGuardianInfoData([
+      setUnMasked2ndGuardianNRIC(getPatientGuardian.data.data.additionalGuardian.nric);
+      setSecondGuardianData([
         {
           label: 'First Name',
-          value: guardianData.additionalGuardian.firstName || 'Not Available',
+          value: getPatientGuardian.data.data.additionalGuardian.firstName || 'Not Available',
         },
         {
           label: 'Last Name',
-          value: guardianData.additionalGuardian.lastName || 'Not Available',
+          value: getPatientGuardian.data.data.additionalGuardian.lastName || 'Not Available',
         },
         {
           label: 'NRIC',
-          value: guardianData.additionalGuardian.nric.replace(/\d{4}(\d{3})/, 'xxxx$1') || 'Not Available',
-        },
-        {
-          label: 'Email',
-          value: guardianData.additionalGuardian.email || 'Not Available',
+          value: getPatientGuardian.data.data.additionalGuardian.nric.replace(/\d{4}(\d{3})/, 'xxxx$1') || 'Not Available',
         },
         {
           label: "Patient's",
-          value: guardianData.additionalGuardian.relationship || 'Not Available',
+          value: getPatientGuardian.data.data.additionalGuardian.relationship || 'Not Available',
         },
         {
           label: 'Contact Number',
-          value: guardianData.additionalGuardian.contactNo || 'Not Available',
+          value: getPatientGuardian.data.data.additionalGuardian.contactNo || 'Not Available',
         },
         {
-          label: 'DOB',
-          value: guardianData.additionalGuardian.dob || 'Not Available',
-        },
-        {
-          label: 'Address',
-          value: guardianData.additionalGuardian.address || 'Not Available',
-        },
-        {
-          label: 'Temp. Address',
-          value: guardianData.additionalGuardian.tempAddress || 'Not Available',
+          label: 'Email',
+          value: getPatientGuardian.data.data.additionalGuardian.email || 'Not Available',
         },
       ]);
     }
-  }, [guardianData]);
+  }, [
+    getPatientGuardian.data.data
+  ]);
 
-  useEffect(() => {
-    if (socialHistoryData !== null && Object.keys(socialHistoryData).length>0) {
-      setSocialHistoryInfo([
-        {
-          label: 'Live with',
-          value: socialHistoryData.liveWithDescription || 'Not Available',
-        },
-        {
-          label: 'Education',
-          value: socialHistoryData.educationDescription || 'Not Available',
-        },
-        {
-          label: 'Occupation',
-          value: socialHistoryData.occupationDescription || 'Not Available',
-        },
-        {
-          label: 'Religion',
-          value: socialHistoryData.religionDescription || 'Not Available',
-        },
-        {
-          label: 'Pet',
-          value: socialHistoryData.petDescription || 'Not Available',
-        },
-        {
-          label: 'Diet',
-          value: socialHistoryData.dietDescription || 'Not Available',
-        },
-        {
-          label: 'Exercise',
-          value: socialHistoryData.exercise,
-        },
-        {
-          label: 'Sexually active',
-          value: socialHistoryData.sexuallyActive,
-        },
-        {
-          label: 'Drug use',
-          value: socialHistoryData.drugUse,
-        },
-        {
-          label: 'Caffeine use',
-          value: socialHistoryData.caffeineUse,
-        },
-        {
-          label: 'Alcohol use',
-          value: socialHistoryData.alcoholUse,
-        },
-        {
-          label: 'Tobacco use',
-          value: socialHistoryData.tobaccoUse,
-        },
-        {
-          label: 'Secondhand smoker',
-          value: socialHistoryData.secondhandSmoker,
-        },
-      ]);
-    }
-  }, [socialHistoryData]);
+  const socialHistoryDataArray = [
+    {
+      label: 'Live with',
+      value: socialHistoryData.liveWithDescription || 'Not Available',
+    },
+    {
+      label: 'Education',
+      value: socialHistoryData.educationDescription || 'Not Available',
+    },
+    {
+      label: 'Occupation',
+      value: socialHistoryData.occupationDescription || 'Not Available',
+    },
+    {
+      label: 'Religion',
+      value: socialHistoryData.religionDescription || 'Not Available',
+    },
+    {
+      label: 'Pet',
+      value: socialHistoryData.petDescription || 'Not Available',
+    },
+    {
+      label: 'Diet',
+      value: socialHistoryData.dietDescription || 'Not Available',
+    },
+    {
+      label: 'Exercise',
+      value: socialHistoryData.exercise,
+    },
+    {
+      label: 'Sexually active',
+      value: socialHistoryData.sexuallyActive,
+    },
+    {
+      label: 'Drug use',
+      value: socialHistoryData.drugUse,
+    },
+    {
+      label: 'Caffeine use',
+      value: socialHistoryData.caffeineUse,
+    },
+    {
+      label: 'Alcohol use',
+      value: socialHistoryData.alcoholUse,
+    },
+    {
+      label: 'Tobacco use',
+      value: socialHistoryData.tobaccoUse,
+    },
+    {
+      label: 'Secondhand smoker',
+      value: socialHistoryData.secondhandSmoker,
+    },
+  ];
 
   // used to call api when page loads
   useEffect(() => {
     retrievePatient(patientID);
     retrieveSocialHistory(patientID);
-    retrieveGuardian(patientID);
     getDoctorNote.request(patientID);
+    getPatientGuardian.request(patientID);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // used to confirm that data has returned from apis before loading the page - Russell
   useEffect(() => {
-    if(patientProfile !== undefined && Object.keys(patientProfile).length>0){
+    if(patientProfile !== undefined && Object.keys(patientProfile).length>0 ){
       setIsPatientLoading(false);
     }
-    if(socialHistoryData !== undefined){
+    if(socialHistoryData !== undefined && Object.keys(socialHistoryData).length>0 ){
       setIsSocialHistoryLoading(false);
     }
-    if(guardianData !== undefined){
-      setIsGuardianLoading(false);
-    }
-    if(isPatientLoading === false && isSocialHistoryLoading === false && isGuardianLoading === false){
+    if(isPatientLoading === false && isSocialHistoryLoading === false){
       setIsLoading(false);
     }
-  }, [patientProfile, isPatientLoading, socialHistoryData, isSocialHistoryLoading, guardianData, isGuardianLoading]);
+  }, [patientProfile, isPatientLoading, socialHistoryData, isSocialHistoryLoading]);
 
   // This callback function will be executed when the screen comes into focus - Russell
   useEffect(() => {
     const navListener = navigation.addListener('focus', () => {
-      setGuardianData([]);
-      setGuardianInfoData([]);
-      setSecondGuardianInfoData([]);
-      setSocialHistoryData([]);
-      setSocialHistoryInfo([]);
-      setPatientProfile({});
-      setIsLoading(true);
-      setIsPatientLoading(true);
-      setIsSocialHistoryLoading(true);
-      setIsGuardianLoading(true);
       retrievePatient(patientID, true)
       retrieveSocialHistory(patientID);
-      retrieveGuardian(patientID);
+      getPatientGuardian.request(patientID);
     });
     return navListener;
   }, [navigation]);
@@ -361,6 +308,12 @@ function PatientInformationScreen(props) {
     if (getDoctorNote.error) {
       getDoctorNote.request(patientID);
     }
+    if (getPatientGuardian.error) {
+      getPatientGuardian.request(patientID);
+    }
+    //if (getSocialHistory.error) {
+    //  getSocialHistory.request(patientID);
+    //}
   };
 
   // Handling of InformationCard editing button onPress
@@ -380,14 +333,14 @@ function PatientInformationScreen(props) {
   
   const handlePatientGuardianOnPress = () => {
     navigation.push(routes.EDIT_PATIENT_GUARDIAN, { 
-      guardianProfile: guardianData.guardian,
+      guardianProfile: getPatientGuardian.data.data.guardian,
       navigation: navigation,
     })
   };
   
   const handlePatientSecondGuardianOnPress = () => {
     navigation.push(routes.EDIT_PATIENT_GUARDIAN, { 
-      guardianProfile: guardianData.additionalGuardian,
+      guardianProfile: getPatientGuardian.data.data.additionalGuardian,
       navigation: navigation,
     })
   };
@@ -400,13 +353,14 @@ function PatientInformationScreen(props) {
     })
   };
 
-  return getDoctorNote.loading || isLoading ? (
+  return getDoctorNote.loading || getPatientGuardian.loading || isLoading ? (
     <ActivityIndicator visible />
   ) : (
     <Center minH="100%" backgroundColor={colors.white_var1}>
       {/* Note the immediate bunch of code will only be rendered
       when one of the APIs has an error. Purpose: Error handling of API */}
-      {(getDoctorNote.error) && (
+      {(getDoctorNote.error ||
+        getPatientGuardian.error) && (
         <Box h="100%">
           <Alert w="100%" status="error">
             <VStack space={2} flexShrink={1} w="100%">
@@ -494,14 +448,14 @@ function PatientInformationScreen(props) {
             <InformationCard
               title={'Guardian(s) Information'}
               subtitle={'Guardian 1'}
-              displayData={guardianInfoData}
+              displayData={guardianData}
               handleOnPress={handlePatientGuardianOnPress}
               unMaskedNRIC={unMaskedGuardianNRIC}
             />
             {isSecondGuardian ? (
               <InformationCard
                 subtitle={'Guardian 2'}
-                displayData={secondGuardianInfoData}
+                displayData={secondGuardianData}
                 handleOnPress={handlePatientSecondGuardianOnPress}
                 unMaskedNRIC={unMasked2ndGuardianNRIC}
               />
@@ -510,7 +464,7 @@ function PatientInformationScreen(props) {
             
             <InformationCard
               title={'Social History'}
-              displayData={socialHistoryInfo}
+              displayData={socialHistoryDataArray}
               handleOnPress={handlePatientSocialHistOnPress}
             />
           </Stack>
