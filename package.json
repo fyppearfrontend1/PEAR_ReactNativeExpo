@@ -76,6 +76,7 @@
     "react-native-screens": "~3.20.0",
     "react-native-svg": "13.4.0",
     "react-native-tab-view": "^3.3.2",
+    "react-native-table-component": "^1.2.2",
     "react-native-web": "~0.18.11",
     "react-native-web-lottie": "^1.4.4",
     "react-router-dom": "^6.6.1",
