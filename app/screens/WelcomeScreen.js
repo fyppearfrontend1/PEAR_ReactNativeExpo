@@ -126,14 +126,8 @@ function WelcomeScreen(props) {
             <AppText style={styles.tagLine}>PEAR</AppText>
           </View>
 
-          <Center flex={1}>
-            <View
-              style={
-                Platform.OS === 'web'
-                  ? styles.credentialsContainerWeb
-                  : styles.credentialsContainer
-              }
-            >
+          <Center flex={1} style={styles.formContainer}>
+            <View style={styles.credentialsContainer}>
               <Input
                 accessible={true}
                 testID="username"
@@ -244,7 +238,7 @@ function WelcomeScreen(props) {
                 />
               )}
             </View>
-            <View style={Platform.OS === 'web' ? { top: 130 } : ''}>
+            <View style={''}>
               <Text
                 style={styles.underline}
                 onPress={() => navigation.navigate(routes.RESET_PASSWORD)}
@@ -261,27 +255,17 @@ function WelcomeScreen(props) {
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
     alignItems: 'center',
+  },
+  formContainer: {
+    paddingHorizontal: 90
   },
   buttonsContainer: {
     width: '100%',
-    padding: 20,
-  },
-  buttonsContainerWeb: {
-    top: 130,
-    width: '100%',
-    padding: 20,
+    paddingVertical: 20
   },
   credentialsContainer: {
-    width: '90%',
-  },
-  credentialsContainerWeb: {
-    top: 130,
-    width: '90%',
-  },
-  errorsContainerWeb: {
-    top: 130,
+    width: '100%'
   },
   logo: {
     width: 100,
@@ -299,9 +283,6 @@ const styles = StyleSheet.create({
   },
   underline: {
     textDecorationLine: 'underline',
-  },
-  underlineWeb: {
-    top: 130,
   },
 });
 
