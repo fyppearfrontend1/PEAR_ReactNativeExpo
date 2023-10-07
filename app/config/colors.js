@@ -33,6 +33,7 @@ export default {
   pink_lightest: '#ffe6ee',
   primary_gray: '#D4D4D4',
   primary_overlay_color: '#00000080', // ligher black color
+  secondary_overlay_color: '#00000020', // ligher black color
   white: '#f3f6f4',
   white_var1: '#FFFFFF',
 };

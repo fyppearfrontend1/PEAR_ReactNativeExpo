@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import {
   ImageBackground,
   View,
@@ -25,13 +25,14 @@ import useApiHandler from 'app/hooks/useApiHandler';
 import routes from 'app/navigation/routes';
 
 // Import from components
-import AppText from 'app/components/AppText';
 import AppButton from 'app/components/AppButton';
 import ErrorMessage from 'app/components/ErrorMessage';
 
 // Import Api
 import userApi from 'app/api/user';
 import LoadingWheel from 'app/components/LoadingWheel';
+import InputFieldCommon from 'app/components/InputFieldCommon';
+
 
 function WelcomeScreen(props) {
   /*
@@ -44,9 +45,12 @@ function WelcomeScreen(props) {
   const [password, setPassword] = useState('');
   const [loginFailed, setLoginFailed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUsernameError, setIsUsernameError] = useState(false);
+  const [isPasswordError, setIsPasswordError] = useState(false);
+
   const apiHandlerHook = useApiHandler();
 
-  /*
+   /*
    * All Api to be place here
    */
 
@@ -103,148 +107,146 @@ function WelcomeScreen(props) {
     setPassword(e);
   };
 
+  const handleUsernameState = useCallback(
+    (state) => {
+      setIsUsernameError(state);
+    },
+    [isUsernameError],
+  );
+
+  const handlePasswordState = useCallback(
+    (state) => {
+      setIsUsernameError(state);
+    },
+    [isPasswordError],
+  );
+
   return (
     <ImageBackground
       style={styles.background}
-      blurRadius={8}
+      blurRadius={9}
       source={require('../assets/login_background.jpg')}
     >
+
       <TouchableWithoutFeedback
         onPress={() => {
-          // Prevent keyboard dismiss for desktop web only
           if (Platform.OS !== 'web' || navigator.userAgent.includes('Mobile')) {
             Keyboard.dismiss();
           }
         }}
       >
-        <View testID={'loginContentContainer'}>
-          <View style={styles.logoContainer}>
-            <Image
-              source={require('../assets/pear_v2.png')}
-              style={styles.logo}
-            />
-            <AppText style={styles.tagLine}>PEAR</AppText>
-          </View>
-
+        <View testID={'loginContentContainer'} style={styles.overlay}>
           <Center flex={1} style={styles.formContainer}>
             <View style={styles.credentialsContainer}>
-              <Input
-                accessible={true}
-                testID="username"
-                autoCapitalize="none"
-                bg={colors.gray}
-                borderRadius="25"
-                color={colors.black}
-                _focus={{
-                  bg: `${colors.lighter}`,
-                  borderColor: `${colors.secondary}`,
-                }}
-                fontFamily={
-                  Platform.OS === 'ios' ? typography.ios : typography.android
-                }
-                height="50"
-                InputLeftElement={
-                  <Icon
-                    as={<MaterialIcons name="person" />}
-                    size={5}
-                    ml="5"
-                    color={colors.black}
-                  />
-                }
-                onChangeText={handleEmail}
-                placeholder="Username/Email"
-                placeholderTextColor={colors.medium}
-                marginBottom="5"
-                size="18"
-                value={email}
-              />
-              <Select
-                accessibilityLabel="Select Role"
-                bg={colors.gray}
-                borderRadius="25"
-                color={colors.black}
-                fontFamily={
-                  Platform.OS === 'ios' ? typography.ios : typography.android
-                }
-                height="50"
-                minWidth="full"
-                minHeight="3%"
-                placeholder="Supervisor"
-                placeholderTextColor={colors.black}
-                onValueChange={(itemValue) => setRole(itemValue)}
-                selectedValue={role}
-                size="18"
-              >
-                <Select.Item label="Supervisor" value="Supervisor" />
-                <Select.Item label="Guardian" value="Guardian" />
-                <Select.Item label="Doctor" value="Doctor" />
-                <Select.Item label="Caregiver" value="Caregiver" />
-                <Select.Item label="Nurse" value="Nurse" />
-              </Select>
-              <Input
-                accessible={true}
-                testID="password"
-                autoCapitalize="none"
-                bg={colors.gray}
-                borderRadius="25"
-                color={colors.black}
-                fontFamily={
-                  Platform.OS === 'ios' ? typography.ios : typography.android
-                }
-                _focus={{
-                  bg: `${colors.lighter}`,
-                  borderColor: `${colors.secondary}`,
-                }}
-                height="50"
-                InputRightElement={
-                  <Icon
-                    as={
-                      <MaterialIcons
-                        name={show ? 'visibility' : 'visibility-off'}
-                      />
-                    }
-                    color={colors.black}
-                    mr="5"
-                    onPress={() => setShow(!show)}
-                    size={5}
-                  />
-                }
-                onChangeText={handlePassword}
-                placeholder="Password"
-                placeholderTextColor={colors.medium}
-                marginTop="5"
-                size="18"
-                value={password}
-                type={show ? 'text' : 'password'}
-              />
-            </View>
-            <Box>
-              <ErrorMessage
-                visible={loginFailed}
-                message={errors.loginError}
-                testID={'loginError'}
-              />
-            </Box>
-            <View style={styles.buttonsContainer}>
-              {isLoading ? (
-                // <ActivityIndicator color={colors.primary_overlay_color} />
-                <LoadingWheel />
-              ) : (
-                <AppButton
-                  title="Login"
-                  color="green"
-                  onPress={onPressLogin}
-                  testingID="Login"
+              <View style={styles.logoContainer}>
+                <Image
+                  source={require('../assets/pear_v2.png')}
+                  style={styles.logo}
                 />
-              )}
-            </View>
-            <View style={''}>
-              <Text
-                style={styles.underline}
-                onPress={() => navigation.navigate(routes.RESET_PASSWORD)}
-              >
-                Forgot Password?
-              </Text>
+                <Text style={styles.tagLine}>PEAR</Text>
+              </View>
+              <View style={styles.verticalMargin}>
+                <InputFieldCommon
+                  testID="username"
+                  title="Username/Email"
+                  isRequired={true}
+                  value={email}
+                  showTitle={false}
+                  onChangeText={handleEmail}
+                  onChildData={handleUsernameState}
+                  InputLeftElement={
+                    <Icon
+                      as={<MaterialIcons name="person" />}
+                      size={5}
+                      ml="5"
+                    />
+                  }
+                />
+              </View>
+              <View style={styles.ComponentContainer}>
+                <Select
+                  accessibilityLabel="Select Role"
+                  borderRadius="25"
+                  InputLeftElement={
+                    <Icon
+                      as={<MaterialIcons name="settings" />}
+                      size={5}
+                      ml="5"
+                    />
+                  }
+                  height="50"
+                  minWidth="full"
+                  placeholder="Supervisor"
+                  onValueChange={(itemValue) => setRole(itemValue)}
+                  selectedValue={role}
+                  size="18"
+                >
+                  <Select.Item label="Supervisor" value="Supervisor" />
+                  <Select.Item label="Guardian" value="Guardian" />
+                  <Select.Item label="Doctor" value="Doctor" />
+                  <Select.Item label="Caregiver" value="Caregiver" />
+                  <Select.Item label="Nurse" value="Nurse" />
+                </Select>
+              </View>
+              <View style={styles.verticalMargin}>
+                <InputFieldCommon
+                  testID="password"
+                  title="Password"
+                  isRequired={true}
+                  value={password}
+                  showTitle={false}
+                  onChangeText={handlePassword}
+                  InputLeftElement={
+                    <Icon
+                      as={<MaterialIcons name="lock" />}
+                      size={5}
+                      ml="5"
+                    />
+                  }
+                  InputRightElement={
+                    <Icon
+                      as={
+                        <MaterialIcons
+                          name={show ? 'visibility' : 'visibility-off'}
+                        />
+                      }
+                      color={colors.black}
+                      mr="5"
+                      onPress={() => setShow(!show)}
+                      size={5}
+                    />
+                  }
+                  type={show ? 'text' : 'password'}
+                  onChildData={handlePasswordState}
+                  />
+                </View>
+              <Box>
+                <ErrorMessage
+                  visible={loginFailed}
+                  message={errors.loginError}
+                  testID={'loginError'}
+                  />
+              </Box>
+              <View style={styles.buttonsContainer}>
+                {isLoading ? (
+                  <LoadingWheel />
+                  ) : (
+                    <AppButton
+                    title="Login"
+                    color="green"
+                    onPress={onPressLogin}
+                    testingID="Login"
+                    />
+                    )}
+              </View>
+              <View style={''}>
+                <Text
+                  style={styles.underline}
+                  onPress={() => navigation.navigate(routes.RESET_PASSWORD)}
+                  >
+                  Forgot Password?
+                </Text>
+              </View>
             </View>
           </Center>
         </View>
@@ -257,15 +259,23 @@ const styles = StyleSheet.create({
   background: {
     alignItems: 'center',
   },
+  overlay: {
+    backgroundColor: colors.secondary_overlay_color
+  },
   formContainer: {
-    paddingHorizontal: 90
+    paddingHorizontal: 75
   },
   buttonsContainer: {
     width: '100%',
     paddingVertical: 20
   },
   credentialsContainer: {
-    width: '100%'
+    backgroundColor: colors.white,
+    width: '100%',
+    paddingHorizontal: 50,
+    paddingTop: 25,
+    paddingBottom: 90,
+    borderRadius: 25  
   },
   logo: {
     width: 100,
@@ -273,17 +283,35 @@ const styles = StyleSheet.create({
     tintColor: colors.black,
   },
   logoContainer: {
-    top: 100,
+    padding: 50,
     alignItems: 'center',
   },
   tagLine: {
     fontWeight: 'bold',
-    paddingVertical: 800,
-    fontSize: 80,
+    marginTop: 14,
+    fontSize: 40,
+    color: colors.black,
+
   },
   underline: {
     textDecorationLine: 'underline',
+    alignSelf: 'center'
   },
+  ComponentContainer: {
+    display: 'flex',
+    width: '100%',
+    marginTop: '4%',
+    justifyContent: 'flex-start',
+  },
+  Select: {
+    fontSize: 16,
+    width: '100%',
+    color: colors.black_var1,
+    fontFamily: Platform.OS === 'ios' ? typography.ios : typography.android,
+  },
+  verticalMargin: {
+    marginTop: '3%'
+  }
 });
 
 export default WelcomeScreen;
