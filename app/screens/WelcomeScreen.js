@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 // Custom Import from https://reactnativeelements.com/docs/
-import { Select, Input, Center, Icon, Box } from 'native-base';
+import { Select, Center, Icon, Box } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import jwt_decode from 'jwt-decode';
 import AuthContext from 'app/auth/context';
@@ -149,7 +149,7 @@ function WelcomeScreen(props) {
                 <InputFieldCommon
                   testID="username"
                   title="Username/Email"
-                  isRequired={true}
+                  isRequired
                   value={email}
                   showTitle={false}
                   onChangeText={handleEmail}
@@ -192,7 +192,8 @@ function WelcomeScreen(props) {
                 <InputFieldCommon
                   testID="password"
                   title="Password"
-                  isRequired={true}
+                  autoCapitalize={'none'}
+                  isRequired
                   value={password}
                   showTitle={false}
                   onChangeText={handlePassword}

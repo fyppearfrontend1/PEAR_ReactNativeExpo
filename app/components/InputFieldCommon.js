@@ -1,7 +1,7 @@
 // Libs
 import React, { useState, useEffect } from 'react';
 import { Platform, StyleSheet, View, Text } from 'react-native';
-import { VStack, Input } from 'native-base';
+import { Input } from 'native-base';
 
 // Configurations
 import typography from 'app/config/typography';
@@ -70,6 +70,22 @@ function InputFieldCommon({
     switch(validation) {
       case "name": {
         msg = msg ? msg : validateAlphaOnly();
+        break;
+      }
+      case "nric": {
+        msg = msg ? msg : validateNRIC();
+        break;
+      }
+      case "home phone": {
+        msg = msg ? msg : validateHomePhoneNo();
+        break;
+      }
+      case "mobile phone": {
+        msg = msg ? msg : validateMobilePhoneNo();
+        break;
+      }
+      case "email": {
+        msg = msg ? msg : validateEmail();
       }
     }    
 
@@ -94,6 +110,29 @@ function InputFieldCommon({
     }
   }
 
+  const validateNRIC = () => {
+    if(!/^[STFGMstfgm]\d{7}[A-Za-z]$/.test(value)) {
+      return 'Invalid NRIC'
+    }
+  }
+
+  const validateHomePhoneNo = () => {
+    if (!/^$|^6[0-9]{7}$/.test(value)) {
+      return 'Home Telephone No. must start with the digit 6, and must have 8 digits.';
+    } 
+  }
+
+  const validateMobilePhoneNo = () => {
+    if (!/^$|^[89][0-9]{7}$/.test(value)) {
+      return 'Mobile No. must start with the digit 8 or 9, and must have 8 digits.';
+    }
+  }
+
+  const validateEmail = () => {
+    if (!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(value)) {
+      return 'Invalid Email';
+    }
+  }
   return (
     <View style={styles.ComponentContainer}>
       {showTitle ? (
@@ -136,7 +175,7 @@ InputFieldCommon.defaultProps = {
   testID: '',
   background: null,
   isRequired: false, 
-  autoCapitalize: "none",
+  autoCapitalize: "words",
   InputLeftElement: null,
   InputRightElement: null,
   showTitle: true,

@@ -30,6 +30,7 @@ import SelectionInputField from 'app/components/SelectionInputField';
 import RadioButtonInput from 'app/components/RadioButtonsInput';
 import SingleOptionCheckBox from 'app/components/SingleOptionCheckBox';
 import ActivityIndicator from 'app/components/ActivityIndicator';
+import InputFieldCommon from 'app/components/InputFieldCommon';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function PatientAddPatientInfoScreen({
@@ -317,29 +318,32 @@ function PatientAddPatientInfoScreen({
                       </Center>
                     </Box>
                   </View>
-
-                  <NameInputField
+                  <InputFieldCommon
                     isRequired
+                    autoCapitalize="words"
                     title={'First Name'}
                     value={patient.FirstName}
                     onChangeText={handleFormData(page, 'FirstName')}
                     onChildData={handleFirstNameState}
+                    validation="name"
                   />
 
-                  <NameInputField
+                  <InputFieldCommon
                     isRequired
                     title={'Last Name'}
                     value={patient.LastName}
                     onChangeText={handleFormData(page, 'LastName')}
                     onChildData={handleLastNameState}
+                    validation="name"
                   />
 
-                  <NameInputField
+                  <InputFieldCommon
                     isRequired
                     title={'Preferred Name'}
                     value={patient.PreferredName}
                     onChangeText={handleFormData(page, 'PreferredName')}
                     onChildData={handlePrefNameState}
+                    validation="name"
                   />
 
                   <SelectionInputField
@@ -355,12 +359,13 @@ function PatientAddPatientInfoScreen({
                     onChildData={handlePrefLanguageState}
                   />
 
-                  <NRICInputField
+                  <InputFieldCommon
                     isRequired
                     title={'NRIC'}
-                    value={patient.NRIC}
+                    value={''+patient.NRIC}
                     onChangeText={handleFormData(page, 'NRIC')}
                     onChildData={handleNRICState}
+                    validation="nric"
                   />
 
                   <RadioButtonInput
@@ -371,6 +376,7 @@ function PatientAddPatientInfoScreen({
                     onChildData={handleGenderState}
                     dataArray={listOfGenders}
                   />
+
                   <View style={styles.dateSelectionContainer}>
                     <DateInputField
                       isRequired
@@ -382,7 +388,7 @@ function PatientAddPatientInfoScreen({
                     />
                   </View>
 
-                  <CommonInputField
+                  <InputFieldCommon
                     isRequired
                     title={'Address'}
                     value={patient.Address}
@@ -390,25 +396,27 @@ function PatientAddPatientInfoScreen({
                     onChildData={handleAddrState}
                   />
 
-                  <CommonInputField
+                  <InputFieldCommon
                     title={'Temporary Address (optional)'}
                     value={patient.TempAddress}
                     onChangeText={handleFormData(page, 'TempAddress')}
                     onChildData={handleTempAddrState}
                   />
 
-                  <TelephoneInputField
+                  <InputFieldCommon
                     title={'Home Telephone No.(optional)'}
-                    value={patient.HomeNo}
-                    numberType={'home'}
+                    value={''+patient.HomeNo}
+                    validation={'home phone'}
+                    keyboardType={'numeric'}
                     onChangeText={handleFormData(page, 'HomeNo')}
                     onChildData={handleHomeTeleState}
                   />
 
-                  <TelephoneInputField
+                  <InputFieldCommon
                     title={'Mobile No.(optional)'}
-                    value={patient.HandphoneNo}
-                    numberType={'mobile'}
+                    value={''+patient.HandphoneNo}
+                    validation={'mobile phone'}
+                    keyboardType={'numeric'}
                     onChangeText={handleFormData(page, 'HandphoneNo')}
                     onChildData={handleMobileState}
                   />

@@ -20,6 +20,7 @@ import EmailInputField from 'app/components/EmailInputField';
 import LoadingWheel from 'app/components/LoadingWheel';
 import CommonInputField from 'app/components/CommonInputField';
 import DateInputField from 'app/components/DateInputField';
+import InputFieldCommon from './InputFieldCommon';
 
 function AddPatientGuardian({ i, title, formData, handleFormData, onError }) {
   const { data, isError, isLoading } = useGetSelectionOptions('Relationship');
@@ -203,29 +204,33 @@ function AddPatientGuardian({ i, title, formData, handleFormData, onError }) {
               Guardian Information {title}
             </Text>
           </View>
-          <NameInputField
+          <InputFieldCommon
             isRequired
+            autoCapitalize="words"
             title={'Guardian First Name'}
             value={guardian.FirstName}
             onChangeText={handleFormData(page, 'FirstName', i)}
             onChildData={handleFirstNameState}
+            validation={'name'}
           />
 
-          <NameInputField
+          <InputFieldCommon
             isRequired
             title={'Guardian Last Name'}
             value={guardian.LastName}
             onChangeText={handleFormData(page, 'LastName', i)}
             onChildData={handleLastNameState}
+            validation={'name'}
           />
 
-          <NRICInputField
+          <InputFieldCommon
             isRequired
             title={'Guardian NRIC'}
             value={guardian.NRIC}
             onChangeText={handleFormData(page, 'NRIC', i)}
             onChildData={handleNRICState}
             maxLength={9}
+            validation={'nric'}
           />
 
           <View style={styles.dateSelectionContainer}>
@@ -249,16 +254,18 @@ function AddPatientGuardian({ i, title, formData, handleFormData, onError }) {
             onChildData={handleRelationState}
           />
 
-          <TelephoneInputField
+          <InputFieldCommon
             isRequired
             title={"Guardian's Handphone No."}
-            value={guardian.ContactNo}
+            value={''+guardian.ContactNo}
             onChangeText={handleFormData(page, 'ContactNo', i)}
             onChildData={handlePhoneState}
+            keyboardType={'numeric'}
             maxLength={8}
+            validation={'home phone'}
           />
 
-          <CommonInputField
+          <InputFieldCommon
             isRequired
             title={'Address'}
             value={guardian.Address}
@@ -266,7 +273,7 @@ function AddPatientGuardian({ i, title, formData, handleFormData, onError }) {
             onChildData={handleAddrState}
           />
 
-          <CommonInputField
+          <InputFieldCommon
             title={'Temporary Address (optional)'}
             value={guardian.TempAddress}
             onChangeText={handleFormData(page, 'TempAddress', i)}
@@ -279,12 +286,13 @@ function AddPatientGuardian({ i, title, formData, handleFormData, onError }) {
             onChangeData={handleFormData(page, 'IsChecked', i)}
           />
 
-          <EmailInputField
+          <InputFieldCommon
             isRequired={guardian.IsChecked}
             title={'Guardian Email'}
             value={guardian.Email}
             onChangeText={handleFormData(page, 'Email', i)}
             onChildData={handleEmailState}
+            validation={'email'}
           />
         </View>
         {/* </Center> */}

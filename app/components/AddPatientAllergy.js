@@ -14,6 +14,7 @@ import useGetSelectionOptions from 'app/hooks/useGetSelectionOptions';
 import CommonInputField from 'app/components/CommonInputField';
 import SelectionInputField from 'app/components/SelectionInputField';
 import LoadingWheel from 'app/components/LoadingWheel';
+import InputFieldCommon from './InputFieldCommon';
 
 function AddPatientAllergy({ i, title, formData, handleFormData, onError }) {
   // retrieve dropdown options from hook
@@ -183,7 +184,7 @@ function AddPatientAllergy({ i, title, formData, handleFormData, onError }) {
                 onChildData={handleReactionState}
               />
 
-              <CommonInputField
+              <InputFieldCommon
                 isRequired={allergy.AllergyListID > 2 ? true : false}
                 title={'Remarks'}
                 value={allergy.AllergyRemarks}
